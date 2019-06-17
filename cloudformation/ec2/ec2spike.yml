@@ -7,15 +7,6 @@
 # Note, this is a basic use of Cloudformation with disregard for Security Group Access
 # You should always update Security Group Access with your own IP Address to ensure your instances security.
 #
-# 1. How to validate template
-#     - aws --region=eu-west-1 cloudformation validate-template --template-body file://ec2spike.yml 
-#
-# 2. How to Create/Update stack 
-#    aws --region=eu-west-1 cloudformation create-stack --stack-name myec2spike --template-body file://ec2spike.yml 
-#    aws --region=eu-west-1 cloudformation update-stack --stack-name myec2spike --template-body file://ec2spike.yml 
-#
-# 3. How to Delete stack
-#   aws cloudformation delete-stack --stack-name myec2level1
 #
 # Example with parameter
 # aws cloudformation create-stack  --stack-name startmyinstance  
