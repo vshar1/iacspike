@@ -3,13 +3,15 @@ Infrastructure as a code spike
 
 ## (A) DevOps toolkit Showcase
 
-### Pre-requisite -  Set AWS keys
-source setprofile.sh
-
 ## Terraform
 
 1.1. [Terraform](./terraform/bootec2)
 
+### Pre-requisite -  Set AWS keys
+    source setprofile.sh
+    terraform init
+    terraform apply
+    terraform destroy    
 
 | S.No     | AWS       | AMI/OS  |     ..              | 
 | -------- |:---------:| -------:| -------------------:|
