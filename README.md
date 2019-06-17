@@ -7,7 +7,7 @@ Infrastructure as a code spike
 
 1.1. [Terraform](./terraform/bootec2)
 
-### Pre-requisite -  Set AWS keys
+Pre-requisite -  Set AWS keys
     > source setprofile.sh
     > terraform init
     > terraform apply
@@ -18,7 +18,10 @@ Infrastructure as a code spike
 | 1        | EC2       | Unix    |  :heavy_check_mark: |
 
 
-1.2  [Cloudformation](./Cloudformation)
+##  Cloudformation
+
+1.1. [Cloudformation ](./Cloudformation)
+
 
 | S.No     | AWS       | AMI/OS  |     ..              | 
 | -------- |:---------:| -------:| -------------------:|
