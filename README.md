@@ -20,11 +20,15 @@ Pre-requisite -  Set AWS keys
 
 ##  Cloudformation
 
-1.1. [Cloudformation ](./Cloudformation)
+1.1. [Cloudformation ](./cloudformation)
 
+#### Provision a ec2 instance with webserver serving  html page on port 80 
 
-| S.No     | AWS       | AMI/OS  |     ..              | 
-| -------- |:---------:| -------:| -------------------:|
-| 1        | EC2       | Unix    |  :grey_exclamation: |
-| 2        | ....      | ....    |  :grey_exclamation: |
+| Description | Command  | Comments | 
+|:---------:| -------:| -------- |
+| Validate  | aws --region=eu-west-1 cloudformation validate-template --template-body file://ec2spike.yml    |  :heavy_check_mark: |   
+| Create    | aws --region=eu-west-1 cloudformation create-stack --stack-name myec2spike --template-body file://ec2spike.yml    |  :heavy_check_mark: | 
+| Delete    | aws --region=eu-west-1 cloudformation delete-stack --stack-name myec2spike    |  :heavy_check_mark: |
+
+ 
 

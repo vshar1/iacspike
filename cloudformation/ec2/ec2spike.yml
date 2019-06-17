@@ -1,0 +1,102 @@
+# Setup EC2 level instance 
+# - Security Group
+# - Tag Name
+# - Basic Web Server
+# - Output
+#
+# Note, this is a basic use of Cloudformation with disregard for Security Group Access
+# You should always update Security Group Access with your own IP Address to ensure your instances security.
+#
+# 1. How to validate template
+#     - aws --region=eu-west-1 cloudformation validate-template --template-body file://ec2spike.yml 
+#
+# 2. How to Create/Update stack 
+#    aws --region=eu-west-1 cloudformation create-stack --stack-name myec2spike --template-body file://ec2spike.yml 
+#    aws --region=eu-west-1 cloudformation update-stack --stack-name myec2spike --template-body file://ec2spike.yml 
+#
+# 3. How to Delete stack
+#   aws cloudformation delete-stack --stack-name myec2level1
+#
+# Example with parameter
+# aws cloudformation create-stack  --stack-name startmyinstance  
+#    --template-body file://home/ec2-user/templates/startmyinstance.json 
+#    --parameters  ParameterKey=KeyPairName,ParameterValue=MyKey ParameterKey=InstanceType,ParameterValue=t1.micro   
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Example EC2 Set-up Level"
+Parameters: 
+  InstanceType: 
+    Description: "Enter t2.micro or m1.small. Default is t2.micro."
+    Type: "String"
+    Default: "t2.micro"
+    AllowedValues: 
+      - "t2.micro"
+      - "m1.small"
+Mappings:
+  RegionMap:
+    eu-west-1:
+      AMI: "ami-bff32ccc" 
+
+Resources:
+  Ec2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      SecurityGroups:
+        - Ref: "webdmz"
+      InstanceType:
+        Ref: "InstanceType"
+      ImageId:
+        Fn::FindInMap:
+          - "RegionMap"
+          - Ref: "AWS::Region"
+          - "AMI"
+      Tags:
+        - Key: "Name"
+          Value: "MyWebServer"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum install httpd -y
+          yum update -y
+          service httpd start
+          chkconfig httpd on
+          echo "<html><h1>Hello CloudStack Spike !</h1></html>" >> /var/www/html/index.html
+
+  webdmz:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Allow http/https/ssh to client host"
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: 'tcp'
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: '0.0.0.0/0'
+        - IpProtocol: 'tcp'
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: '0.0.0.0/0'
+        - IpProtocol: 'icmp'
+          FromPort: '-1'
+          ToPort: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: "webdmz"
+
+Outputs:
+  PublicDNSName:
+    Description: "Public DNS name of the new EC2 instance"
+    Value:
+      Fn::GetAtt:
+      - "Ec2Instance"
+      - "PublicDnsName"
+  PublicIPAddress:
+    Description: "Public IP address of the new EC2 instance"
+    Value:
+      Fn::GetAtt:
+      - "Ec2Instance"
+      - "PublicIp"
