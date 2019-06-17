@@ -16,4 +16,10 @@ source setprofile.sh
 | 1        | EC2       | Unix    |  :heavy_check_mark: |
 
 
+1.2  [Cloudformation](./Cloudformation)
+
+| S.No     | AWS       | AMI/OS  |     ..              | 
+| -------- |:---------:| -------:| -------------------:|
+| 1        | EC2       | Unix    |  :grey_exclamation: |
+| 2        | ....      | ....    |  :grey_exclamation: |
 
