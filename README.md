@@ -31,4 +31,11 @@ Pre-requisite -  Set AWS keys
 | Delete    | aws --region=eu-west-1 cloudformation delete-stack --stack-name myec2spike    |  :heavy_check_mark: |
 
  
+#### Provision a ec2 instance with docker daemon
+
+| Description | Command  | Comments | 
+|:---------:| -------:| -------- |
+| Create  | aws --region=eu-west-1 cloudformation create-stack --stack-name myec2docker --template-body file://ec2docker.yml --parameters ParameterKey=KeyName,ParameterValue=${AWS_KEY_PAIR_NAME}    |  :heavy_check_mark: |  
+
+
 
