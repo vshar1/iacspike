@@ -391,9 +391,11 @@ Resources:
               command: usermod -a -G docker ec2-user
             02_start_docker:
               command: service docker start
+            03_create_host_volume_mount_point:
+              command: sudo mkdir -p /var/docker/jenkins && sudo chmod 777 /var/docker/jenkins
             03_start_jenkins:
               # Docker Image: https://hub.docker.com/r/denny/jenkins_image/~/dockerfile/
-              command: docker run -d -t -p 8080:8080 --name my-jenkins --restart=always denny/jenkins_image:latest
+              command: sudo docker run -d -t -p 8080:8080 --name=spike-jenkins -v  /var/docker/jenkins:/var/jenkins_home --restart=always denny/jenkins_image:latest
               test: docker ps -a | grep -v jenkins
 
     Properties:
