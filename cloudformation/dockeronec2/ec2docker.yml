@@ -138,34 +138,15 @@ Resources:
       SecurityGroups:
         - !Ref 'JenkinsSecurityGroup'
       KeyName: !Ref 'KeyName'
-      UserData: !Base64
-        Fn::Join:
-          - ''
-          - - '#!/bin/bash -xe
 
-              '
-            - 'yum update -y aws-cfn-bootstrap
 
-              '
-            - '/opt/aws/bin/cfn-init -v '
-            - '         --stack '
-            - !Ref 'AWS::StackName'
-            - '         --resource Jenkins '
-            - '         --configsets jenkins_install '
-            - '         --region '
-            - !Ref 'AWS::Region'
-            - '
+      UserData:
+       Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Jenkins --configsets jenkins_install --region ${AWS::Region}
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Jenkins --region ${AWS::Region}
 
-              '
-            - '/opt/aws/bin/cfn-signal -e $? '
-            - '         --stack '
-            - !Ref 'AWS::StackName'
-            - '         --resource Jenkins '
-            - '         --region '
-            - !Ref 'AWS::Region'
-            - '
-
-              '
     CreationPolicy:
       ResourceSignal:
         Timeout: PT15M
