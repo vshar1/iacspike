@@ -37,5 +37,9 @@ Pre-requisite -  Set AWS keys
 |:---------:| -------:| -------- |
 | Create  | aws --region=eu-west-1 cloudformation create-stack --stack-name myec2docker --template-body file://ec2docker.yml --parameters ParameterKey=KeyName,ParameterValue=${AWS_KEY_PAIR_NAME}    |  :heavy_check_mark: |  
 
+##### Build the base Docker Image 
+    docker build -t iacspike/jenkins:0.1 . 
+
+
 
 
