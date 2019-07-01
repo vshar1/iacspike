@@ -31,7 +31,7 @@ Pre-requisite -  Set AWS keys
 | Delete    | aws --region=eu-west-1 cloudformation delete-stack --stack-name myec2spike    |  :heavy_check_mark: |
 
  
-#### Provision a ec2 instance with docker daemon
+#### Provision a ec2 instance with docker daemon with Jenkins
 
 | Description | Command  | Comments | 
 |:---------:| -------:| -------- |
@@ -40,6 +40,12 @@ Pre-requisite -  Set AWS keys
 ##### Build the base Docker Image 
     docker build -t iacspike/jenkins:0.1 . 
 
+###### Build the base Docker Image 
+    docker build -t iacspike/jenkins:0.1 . 
+ 
+#### Provision a Nexus instance as a container
 
-
-
+| Description | Command  | Comments | 
+|:---------:| -------:| -------- |
+| Create  | aws --region=eu-west-1 cloudformation create-stack --stack-name myec2nexus --template-body file://ec2nexus.yml --parameters ParameterKey=KeyName,ParameterValue=${AWS_KEY_PAIR_NAME}    |  :heavy_check_mark: |  
+| Delete  | aws --region=eu-west-1 cloudformation delete-stack --stack-name myec2nexus  |  :heavy_check_mark: |  
