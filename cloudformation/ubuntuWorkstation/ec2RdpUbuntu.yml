@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation to spin off a Ubuntu Workstation which can be used via RDP in browser'
+
+# Inputs
+# 1. AMI-ID
+# 2. Define Security Group
+# 3. Define VPC
+# 4. Define ec2 type
+
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  InstanceType:
+    Description: Ubuntu EC2 instance type
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t1.micro
+      - t2.micro
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type.
+
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Mappings:
+  AWSInstanceType2Arch:
+    t1.micro:
+      Arch: PV64
+    t2.micro:
+      Arch: HVM64
+    t2.medium:
+      Arch: HVM64      
+
+  AWSRegionArch2AMI:
+    eu-west-2:
+      PV64: NOT_SUPPORTED
+      HVM64: ami-0d8d7288aca78ee6f
+      HVMG2: ami-0d8d7288aca78ee6f
+Resources:
+  UbuntuSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable RDP access over http
+        + SSH access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '8081'
+          ToPort: '8081'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0          
+        - IpProtocol: tcp
+          FromPort: '3389'
+          ToPort: '3389'
+          CidrIp: 0.0.0.0/0          
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: 0.0.0.0/0          
+
+  Ubuntu:
+    Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          ubuntu_install:
+            - install_cfn
+        install_cfn:
+          files:
+            /etc/cfn/cfn-hup.conf:
+              content: !Join ['', ['[main]
+
+                    ', stack=, !Ref 'AWS::StackId', '
+
+                    ', region=, !Ref 'AWS::Region', '
+
+                    ']]
+              mode: '000400'
+              owner: root
+              group: root
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content: !Join ['', ['[cfn-auto-reloader-hook]
+
+                    ', 'triggers=post.update
+
+                    ', 'path=Resources.Ubuntu.Metadata.AWS::CloudFormation::Init
+
+                    ', 'action=/opt/aws/bin/cfn-init -v ', '         --stack ', !Ref 'AWS::StackName',
+                  '         --resource Ubuntu ', '         --configsets ubuntu_install ',
+                  '         --region ', !Ref 'AWS::Region', '
+
+                    ']]
+              mode: '000400'
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              cfn-hup:
+                enabled: 'true'
+                ensureRunning: 'true'
+                files:
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+
+    Properties:
+      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch,
+          !Ref 'InstanceType', Arch]]
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroups:
+        - !Ref 'UbuntuSecurityGroup'
+      KeyName: !Ref 'KeyName'
+
+      UserData:
+       Fn::Base64: !Sub |
+          #!/bin/bash 
+          yum update -y aws-cfn-bootstrap
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Nexus --configsets nexus_install --region ${AWS::Region}
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Nexus --region ${AWS::Region}
+         
+          # install yum
+          sudo apt install yum
+          
+          # jq
+          sudo yum install -y jq
+          
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+Outputs:
+  WebsiteURL:
+    Value: !Join ['', ['http://', !GetAtt 'Ubuntu.PublicIp', ':8081']]
+    Description: Ubuntu RDP Link

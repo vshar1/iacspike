@@ -49,3 +49,10 @@ Pre-requisite -  Set AWS keys
 |:---------:| -------:| -------- |
 | Create  | aws --region=eu-west-1 cloudformation create-stack --stack-name myec2nexus --template-body file://ec2nexus.yml --parameters ParameterKey=KeyName,ParameterValue=${AWS_KEY_PAIR_NAME}    |  :heavy_check_mark: |  
 | Delete  | aws --region=eu-west-1 cloudformation delete-stack --stack-name myec2nexus  |  :heavy_check_mark: |  
+
+#### Provision a remote Desktop Ubuntu 
+
+1. [Base AMI Image URL](https://aws.amazon.com/marketplace/pp/B07LBG6YGB?qid=1562077424447&ref_=srh_res_product_title&sr=0-1&stl=true#pdp-support)
+
+2. [AMI ID](https://xworkspace/amd64/desktop-v1.1.0-20190325.55-7a90aa02-06a1-4c3a-93cb-c4572cc77c6c-ami-0aaf600fbf44d9153.4_ami-0d8d7288aca78ee6f)
+
