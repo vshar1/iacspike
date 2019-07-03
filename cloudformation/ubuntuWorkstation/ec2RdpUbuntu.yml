@@ -52,8 +52,8 @@ Resources:
         + SSH access
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '8081'
-          ToPort: '8081'
+          FromPort: '80'
+          ToPort: '80'
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: '22'
@@ -123,20 +123,69 @@ Resources:
       UserData:
        Fn::Base64: !Sub |
           #!/bin/bash 
-          yum update -y aws-cfn-bootstrap
-          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Ubuntu --configsets ubuntu_install --region ${AWS::Region}
-          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Ubuntu --region ${AWS::Region}
          
+          mvn --version
+
+          sudo su
+
+          echo ============arun1.0
           # install yum
-          sudo apt install yum
+          # See logs at /var/log/cloud-init-output.log
+
+          echo ============arun1.1
+          ps aux | grep -i apt 
+
+          systemctl stop apt-daily.timer
           
-          # jq
-          sudo yum install -y jq
+          echo ============arun1.2
           
-    CreationPolicy:
-      ResourceSignal:
-        Timeout: PT15M
-Outputs:
-  WebsiteURL:
-    Value: !Join ['', ['http://', !GetAtt 'Ubuntu.PublicIp', ':8081']]
-    Description: Ubuntu RDP Link
+          ps aux | grep -i apt 
+          
+          systemctl disable apt-daily.timer
+          systemctl mask apt-daily.service
+          systemctl daemon-reload
+
+          killall update-notifier
+          
+          apt policy maven
+
+          echo ============arun1.3
+
+          sudo apt install maven
+
+          echo ============arun1.4
+
+          mvn --version
+
+          echo ============arun1.5
+
+          rm /var/lib/dpkg/lock-frontend
+          echo ============arun1.6
+
+          rm /var/lib/dpkg/lock
+          echo ============arun1.7
+
+          rm /var/cache/apt/archives/lock
+
+          echo ============arun1.8
+          dpkg --configure -a
+          
+          echo /tmp/======arun5
+          apt-get update
+          apt -y install yum
+          apt -y install yum-utils
+
+
+          echo ============arun1.9
+          wget  https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+          tar -zxvf aws-cfn-bootstrap-latest.tar.gz
+          mv aws-cfn-bootstrap-1.4 /opt/aws
+
+          echo ============arun1.10
+          #/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Ubuntu --configsets ubuntu_install --region ${AWS::Region}
+
+          echo /tmp/======arun8
+
+          #/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Ubuntu --region ${AWS::Region}
+         
+          mkdir /tmp/======arun9
