@@ -2,10 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation to spin off a Ubuntu Workstation which can be used via RDP in browser'
 
 # Inputs
-# 1. AMI-ID
-# 2. Define Security Group
-# 3. Define VPC
-# 4. Define ec2 type
+# 1. AMI-ID - Done
+# 2. Define Security Group - Done
+# 3. Attach Existing VPC - ?
+# 4. Define ec2 type - Done
+# 
 
 Parameters:
   KeyName:
@@ -45,11 +46,11 @@ Mappings:
       HVM64: ami-0d8d7288aca78ee6f
       HVMG2: ami-0d8d7288aca78ee6f
 Resources:
-  UbuntuSecurityGroup:
+  UbuntuWorkStationSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable RDP access over http
-        + SSH access
+      GroupDescription: Ubuntu WorkStation to Enable RDP access over http
+      GroupName: Ubuntu WorkStation
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '80'
@@ -117,7 +118,8 @@ Resources:
           !Ref 'InstanceType', Arch]]
       InstanceType: !Ref 'InstanceType'
       SecurityGroups:
-        - !Ref 'UbuntuSecurityGroup'
+        - !Ref 'UbuntuWorkStationSecurityGroup'
+
       KeyName: !Ref 'KeyName'
 
       UserData:
@@ -127,18 +129,13 @@ Resources:
           mvn --version
 
           sudo su
-
-          echo ============arun1.0
           # install yum
           # See logs at /var/log/cloud-init-output.log
 
-          echo ============arun1.1
           ps aux | grep -i apt 
 
           systemctl stop apt-daily.timer
-          
-          echo ============arun1.2
-          
+         
           ps aux | grep -i apt 
           
           systemctl disable apt-daily.timer
@@ -146,46 +143,18 @@ Resources:
           systemctl daemon-reload
 
           killall update-notifier
-          
-          apt policy maven
-
-          echo ============arun1.3
-
-          sudo apt install maven
-
-          echo ============arun1.4
-
-          mvn --version
-
-          echo ============arun1.5
+           
 
           rm /var/lib/dpkg/lock-frontend
-          echo ============arun1.6
 
           rm /var/lib/dpkg/lock
-          echo ============arun1.7
 
           rm /var/cache/apt/archives/lock
 
-          echo ============arun1.8
           dpkg --configure -a
           
-          echo /tmp/======arun5
           apt-get update
           apt -y install yum
           apt -y install yum-utils
 
-
-          echo ============arun1.9
-          wget  https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-          tar -zxvf aws-cfn-bootstrap-latest.tar.gz
-          mv aws-cfn-bootstrap-1.4 /opt/aws
-
-          echo ============arun1.10
-          #/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource Ubuntu --configsets ubuntu_install --region ${AWS::Region}
-
-          echo /tmp/======arun8
-
-          #/opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource Ubuntu --region ${AWS::Region}
-         
-          mkdir /tmp/======arun9
+ 

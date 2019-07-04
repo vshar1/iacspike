@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation to spin off a Ubuntu Workstation which can be used via RDP in browser'
  
 # 3. Define VPC
-#  aws --region=eu-west-2 cloudformation update-stack --stack-name testvpc  --template-body file://createvpc.yml
+#  aws --region=eu-west-2 cloudformation create-stack --stack-name testvpc  --template-body file://createvpc.yml
 
 Resources: 
 
