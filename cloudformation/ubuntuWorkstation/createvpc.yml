@@ -13,10 +13,26 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
-        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
+        Value:  !Join ['', ["VPC-", !Ref "AWS::StackName" ]]
+
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: MyVPC
+      CidrBlock: 10.10.10.0/24
+      AvailabilityZone: "eu-west-2a"
+      Tags:
+      - Key: Name
+        Value:  !Join ['', ["Subnet-",!Ref "AWS::StackName" ]]
 Outputs:
   StackVPC:
     Description: The ID of the VPC
     Value: !Ref MyVPC
     Export:
       Name: !Sub "${AWS::StackName}-VPCID"
+  StackSubNet:
+    Description: The ID of the Subnet
+    Value: !Ref MySubnet
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID"      

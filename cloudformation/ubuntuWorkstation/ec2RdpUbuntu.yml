@@ -120,6 +120,12 @@ Resources:
       SecurityGroups:
         - !Ref 'UbuntuWorkStationSecurityGroup'
 
+      NetworkInterfaces:
+        - SubnetId: subnet-05714a2ac3ed70185
+
+      GroupSet:
+      - Ref: 'UbuntuWorkStationSecurityGroup'
+
       KeyName: !Ref 'KeyName'
 
       UserData:
