@@ -30,8 +30,8 @@ Execution
 
 ### Sample Run screenshot as attached ### 
 
-<img src="Preview1.gif"  width="850" height="340"> 
-<img src="Preview2.gif"  width="850" height="340">
+<img src="part1/Preview1.gif"  width="1000" height="600"> 
+<img src="part1/Preview2.gif"  width="1000" height="600"> 
 
 ## Terraform TODO (Not achieved)
 
