@@ -33,6 +33,10 @@ Github API
     
     diff output/list-public-gists.json_2022-06-20T00\:25\:10+0100.json output/list-public-gists.json_2022-06-26T00\:25\:10+0100.json 
 
+### Sample Run screenshot as attached ### 
+
+<img src="PreviewEE.gif"  width="1000" height="600"> 
+
  # Troubleshooting
    
   Verify if you have saved your token at write path
