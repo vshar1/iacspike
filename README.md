@@ -12,30 +12,17 @@ Github API
  # Solution Execution Pre-requisite
 
    - Jq Installed on local machine (Tested on jq-1.5-1-a5b5cbe)
-
-   - GithubApi Token
-   - Save your token in input/secrets/gitapi_token.json
+   - Bash (Tested on GNU bash, version 4.4.20()
 
  # Execute Solution
 
-    iacspike > sh ./get_all_public_gist.sh
+    iacspike > ./get_pub_gist_for_a_user.sh <username>
 .
 
-    Second time it will fetch the since last execution time as saved in output/list-public-gists.lastRun
-
-    iacspike > sh ./get_all_public_gist.sh
-.
-
-    For verification of since last run append 
-    output/list-public-gists.lastRun to different date & run shell again
-
-    and see diff of output
-    
-    diff output/list-public-gists.json_2022-06-20T00\:25\:10+0100.json output/list-public-gists.json_2022-06-26T00\:25\:10+0100.json 
 
 ### Sample Run screenshot as attached ### 
 
-<img src="PreviewEE.gif"  width="1000" height="600"> 
+<img src="PreviewEE.gif"  width="1000" height="800"> 
 
  # Troubleshooting
    
@@ -46,7 +33,7 @@ Github API
 # Future add on functionality for query parameters
 
   Append input/list_pub_gist_params/parameters.json with 
-  iacspike > sh ./get_all_public_gist.sh 1
+  iacspike > sh ./get_pub_gist_for_a_user.sh 1
 
  # References
 
