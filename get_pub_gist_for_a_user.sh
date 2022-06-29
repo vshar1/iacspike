@@ -3,8 +3,8 @@ set -e
 
 if [[ $# -ne 1 ]]; then
     echo -e "\nUsername parameter missing"
-    echo -e "\n: usage: ./get_all_public_gist.sh <user-name>"
-    echo -e "\ne.g. ./get_all_public_gist.sh vshar1\n"
+    echo -e "\n: usage: ./get_pub_gist_for_a_user.sh <user-name>"
+    echo -e "\ne.g. ./get_pub_gist_for_a_user.sh vshar1\n"
     exit 1
 fi
 
@@ -22,7 +22,7 @@ TMP_GIST_DETAILS_FILE="output/tmp_gist_details.json"
 get_pub_gist_for_a_user()
  {  
     echo -e "\n Getting all gist information for a user"
-    curl $BASE_GIST_URL > $USER_GIST_INFO
+    curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token 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"  $BASE_GIST_URL > $USER_GIST_INFO
     GIST_COUNT=$(cat $USER_GIST_INFO  | jq .public_gists)
     echo -e "\n User has total count of public_gists=" $GIST_COUNT
 
@@ -42,7 +42,8 @@ get_pub_gist_for_a_user()
         do 
             pageNumber=$(($page + 1)) 
             pageUrl=$BASE_GIST_URL'/gists?page='$pageNumber'&per_page='$DEFAULT_PER_PAGE''$SUFFIX
-            curl $pageUrl > $TMP_GIST_DETAILS_FILE
+            echo -e "\n pageUrl="$pageUrl
+            curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token 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" $pageUrl > $TMP_GIST_DETAILS_FILE
             GIST_SIZE=$(cat output/tmp_gist_details.json | jq -c '. | length')
 
             if (( 1 > $GIST_SIZE )); then
@@ -59,12 +60,12 @@ get_pub_gist_for_a_user()
                     raw_file_url=$(jq -r '.files[].raw_url' <<< "${gist}")
                     echo -e "\n========================================================================================================" 
                     echo -e "Gist_Url=$html_url \n Has files \n [$file_names] \n raw_file_url=$raw_file_url"
-                    curl $raw_file_url
+                    curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token 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" $raw_file_url
                 done
             unset IFS
         done
     
-    EXECUTION_DATE=($(date +"%Y-%m-%dT%H:%M:%S%z"))
+    EXECUTION_DATE=($(date -u +"%Y-%m-%dT%H:%M:%SZ"))
     echo "{\"since\":\"$EXECUTION_DATE\"}" | jq '.' > $LAST_RUN_PUBLIC_GIST_FILE 
  }
 
