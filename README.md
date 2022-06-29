@@ -1,5 +1,5 @@
 # Take Home Test from Equal Experts
-
+ 
 Github API
     - Write a script that uses the Github API to query a user’s publicly available gists. 
 
