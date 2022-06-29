@@ -24,17 +24,6 @@ Github API
 
 <img src="PreviewEE.gif"  width="1000" height="800"> 
 
- # Troubleshooting
-   
-  Verify if you have saved your token at write path
-
-  iacspike > jq -r .token secrets/gitapi_token.json
-
-# Future add on functionality for query parameters
-
-  Append input/list_pub_gist_params/parameters.json with 
-  iacspike > sh ./get_pub_gist_for_a_user.sh 1
-
  # References
 
  https://docs.github.com/en/rest/gists/gists#list-public-gists
